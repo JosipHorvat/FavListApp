@@ -1,0 +1,66 @@
+              ######### This is my personal guide (exercise) on how to easily set up #########
+                             ############   RECYCLER VIEW #############
+
+   1. ###########  New project-> BASIC ACTIVITY ->
+   Delete fragment_first, second: xml files and java class.
+   Fragment from content_main.xml, FloatingActionButton from MainActivity.java
+   and finally navigation folder.
+   Test app and it should work if done correctly.
+
+
+   2. ########### content_Main.xml -> add RecyclerView->  layout width length = 0, add constraints, id.
+
+   3. ############ new Class in this case named CategoryAdapter -> extends RecyclerView.Adapter<view holder go here>{}
+
+   4. ########### new Class CategoryViewHolder extends RecyclerView.ViewHolder
+
+   constructor(View view){
+    super(view);
+   }
+
+   5.########## add CategoryViewHolder into <> in class CategoryAdapter
+   implement methods ctrl+o
+
+   6.######## create new (LINEAR -> horizontal) layout category_viewholder.xml
+   layout width, length = wrap content(IT WILL TAKE SPACE AS MUCH AS OBJECTS INSIDE IT NEED TO)
+   android:layout_margin="16dp"
+   android:background="#c30000"
+
+   ADD 2 TextViews for testing purpose:
+    <TextView
+           android:id="@+id/txtCategoryNumber"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:background="#FFFFFF"
+           android:layout_margin="16dp"
+           android:textSize="30sp"
+           android:textColor="#651fff" />
+
+        Then go back to 4.##### and initialize this text views
+        private TextView txtCategoryNumber;
+        inside of constructor: txtCategoryNumber = view.FB(R.id.(id of text view);
+        GETERS for textViews.
+
+   7. #############  CategoryRecyclerAdapter:
+    string[] categories = {.....}
+    getItemCount method return categories.length
+
+    onCreate method:
+
+      LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+      View view = layoutInflater.inflate(R.layout.category_viewholder,parent, false);
+      return new CategoryViewHolder(view);
+
+      onBindMethod
+      holder.getTxtCategoryNumber().setText(Integer.toString(position));
+      holder.getTxtCategoryName().setText(categories[position +1])THIS IS ARRAY LIST CREATED;
+
+    8. ######### MainActivity.java -> private RecyclerView rw;
+    onCreate method: rw = FB(R.id.category_recyclerview)
+                       rw.setAdapter(new CategoryRecyclerAdapter());
+                       rw.setLayoutManager(new LinearLayoutManager(this);
+
+        IF EVERYTHING WROTEN PROPERLY REC VIEW SHOULD WORK PROPERLY!
+
+
+
