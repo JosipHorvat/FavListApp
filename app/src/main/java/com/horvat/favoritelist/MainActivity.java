@@ -20,9 +20,14 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView categoryRecyclerView;
+
+    //This is not UI so we can initialize it in MainActivity *** Context is "this" MainActivity
+    private CatrgoryManager mCatrgoryManager = new CatrgoryManager(this);
 
 
     @Override
@@ -32,8 +37,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ArrayList<Category> categories = mCatrgoryManager.retrieveCategories();
+
         categoryRecyclerView = findViewById(R.id.category_recyclerview);
-        categoryRecyclerView.setAdapter(new CategoryRecyclerAdapter());
+
+        //TODO: code in CategoryRecyclerAdapter() needs to be changed because from now on we will get the data from CategoryManager class(SharedPreferences)
+        categoryRecyclerView.setAdapter(new CategoryRecyclerAdapter(categories));
         categoryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -86,7 +95,14 @@ public class MainActivity extends AppCompatActivity {
         alertBuilder.setPositiveButton(positiveButtonTitle, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+                //1. New Category 2. CategooryManager needs an object to save and that is category
+                Category category = new Category(categoryEditText.getText().toString(), new ArrayList<String>());
+                mCatrgoryManager.saveCategory(category);
+
+                CategoryRecyclerAdapter categoryRecyclerAdapter =(CategoryRecyclerAdapter) categoryRecyclerView.getAdapter();
+                categoryRecyclerAdapter.addCategory(category);
+
+                dialog.dismiss();
             }
         });
 
