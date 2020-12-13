@@ -1,8 +1,9 @@
 package com.horvat.favoritelist;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Category {
+public class Category implements Serializable {
 
     private String name;
     //we will never get a null point error if initializing Array list

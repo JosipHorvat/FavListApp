@@ -1,6 +1,8 @@
 package com.horvat.favoritelist;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,12 +24,14 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CategoryRecyclerAdapter.CategoryIsClickedInterface {
 
     private RecyclerView categoryRecyclerView;
 
     //This is not UI so we can initialize it in MainActivity *** Context is "this" MainActivity
     private CatrgoryManager mCatrgoryManager = new CatrgoryManager(this);
+
+    public static final String CATEGORY_OBJECT_KEY = "CATEGORY_KEY";
 
 
     @Override
@@ -41,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
         categoryRecyclerView = findViewById(R.id.category_recyclerview);
 
-        //TODO: code in CategoryRecyclerAdapter() needs to be changed because from now on we will get the data from CategoryManager class(SharedPreferences)
-        categoryRecyclerView.setAdapter(new CategoryRecyclerAdapter(categories));
+
+        categoryRecyclerView.setAdapter(new CategoryRecyclerAdapter(categories,this ));
         categoryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -103,11 +107,30 @@ public class MainActivity extends AppCompatActivity {
                 categoryRecyclerAdapter.addCategory(category);
 
                 dialog.dismiss();
+                displayCategoryItems(category);
             }
         });
 
 
         alertBuilder.create().show();
+
+    }
+
+
+    private void displayCategoryItems(Category category){
+        Intent categoryItemsIntent = new Intent(this,CategoryItemsActivity.class);
+        categoryItemsIntent.putExtra(CATEGORY_OBJECT_KEY, category);
+
+        startActivity(categoryItemsIntent);
+
+
+
+    }
+
+    @Override
+    public void categoryIsClicked(Category category) {
+
+        displayCategoryItems(category);
 
     }
 }
