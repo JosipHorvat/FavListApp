@@ -10,11 +10,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 
-public class CatrgoryManager {
+public class CatregoryManager {
 
     private Context mContext;
 
-    public CatrgoryManager(Context context){
+    public CatregoryManager(Context context){
         mContext = context;
     }
 
@@ -27,7 +27,7 @@ public class CatrgoryManager {
 
         //Array list need to be converted
         //category.getItems is getter of ArrayList of items.
-        HashSet itemsHashSet = new HashSet(Arrays.asList(category.getItems()));
+        HashSet itemsHashSet = new HashSet(category.getItems());
         editor.putStringSet(category.getName(), itemsHashSet );
 
         editor.apply();
