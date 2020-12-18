@@ -20,18 +20,20 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements CategoryRecyclerAdapter.CategoryIsClickedInterface {
+public class MainActivity extends AppCompatActivity  implements CategoryFragment.OnCategoryInteractionListener {
 
-    private RecyclerView categoryRecyclerView;
 
-    //This is not UI so we can initialize it in MainActivity *** Context is "this" MainActivity
-    private CatregoryManager mCatregoryManager = new CatregoryManager(this);
 
     public static final String CATEGORY_OBJECT_KEY = "CATEGORY_KEY";
     public static final int MAIN_ACTIVITY_REQUEST_CODE = 1000;
+
+    private CategoryFragment mCategoryFragment = CategoryFragment.newInstance();
+
+    private FrameLayout frameLayout;
 
 
     @Override
@@ -41,13 +43,11 @@ public class MainActivity extends AppCompatActivity implements CategoryRecyclerA
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ArrayList<Category> categories = mCatregoryManager.retrieveCategories();
-
-        categoryRecyclerView = findViewById(R.id.category_recyclerview);
-
-
-        categoryRecyclerView.setAdapter(new CategoryRecyclerAdapter(categories,this ));
-        categoryRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        frameLayout = findViewById(R.id.category_fragment_container);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.category_fragment_container,mCategoryFragment)
+                .commit();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -101,11 +101,7 @@ public class MainActivity extends AppCompatActivity implements CategoryRecyclerA
             public void onClick(DialogInterface dialog, int which) {
                 //1. New Category 2. CategooryManager needs an object to save and that is category
                 Category category = new Category(categoryEditText.getText().toString(), new ArrayList<String>());
-                mCatregoryManager.saveCategory(category);
-
-                CategoryRecyclerAdapter categoryRecyclerAdapter =(CategoryRecyclerAdapter) categoryRecyclerView.getAdapter();
-                categoryRecyclerAdapter.addCategory(category);
-
+                mCategoryFragment.giveCategoryToManager(category);
                 dialog.dismiss();
                 displayCategoryItems(category);
             }
@@ -131,24 +127,16 @@ public class MainActivity extends AppCompatActivity implements CategoryRecyclerA
 
         if(requestCode == MAIN_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK){
             if(data != null){
-                mCatregoryManager.saveCategory((Category) data.getSerializableExtra(CATEGORY_OBJECT_KEY));
-                updateCategories();
+               mCategoryFragment.saveCategory((Category) data.getSerializableExtra(CATEGORY_OBJECT_KEY));
             }
         }
     }
 
-    private void updateCategories() {
-
-       ArrayList<Category> categories = mCatregoryManager.retrieveCategories();
-       categoryRecyclerView.setAdapter(new CategoryRecyclerAdapter(categories, this));
-
-
-    }
-
     @Override
-    public void categoryIsClicked(Category category) {
+    public void categoryIsTapped(Category category) {
 
-        displayCategoryItems(category);
+    displayCategoryItems(category);
+
 
     }
 }

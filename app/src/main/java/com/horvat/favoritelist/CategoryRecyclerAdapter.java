@@ -17,11 +17,11 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryViewHo
     }
 
     private ArrayList<Category> categories;
-    private CategoryIsClickedInterface categoryIsClickedInterface;
+    private CategoryIsClickedInterface categoryIsClickedListener;
 
-    public CategoryRecyclerAdapter(ArrayList<Category> categories, CategoryIsClickedInterface categoryIsClickedInterface) {
+    public CategoryRecyclerAdapter(ArrayList<Category> categories, CategoryIsClickedInterface categoryIsClickedListener) {
         this.categories = categories;
-        this.categoryIsClickedInterface = categoryIsClickedInterface;
+        this.categoryIsClickedListener = categoryIsClickedListener;
 
     }
 
@@ -47,7 +47,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<CategoryViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            categoryIsClickedInterface.categoryIsClicked(categories.get(position));
+            categoryIsClickedListener.categoryIsClicked(categories.get(position));
             }
         });
 
